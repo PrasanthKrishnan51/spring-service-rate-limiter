@@ -1,0 +1,59 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: product-service
+
+  data:
+    mongodb:
+      uri: ${MONGO_URI:mongodb://localhost:27017/productstoredb}
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 600000   # 10 minutes in ms
+
+# Service-Level Rate Limiter
+rate-limiter:
+  enabled: true
+  key-strategy: API_KEY     # IP | API_KEY | USER_ID
+  redis-key-prefix: "svc_rate_limiter"
+
+  routes:
+    read:
+      replenish-rate: 10
+      burst-capacity: 20
+      requested-tokens: 1
+      methods: GET
+
+    write:
+      replenish-rate: 5
+      burst-capacity: 10
+      requested-tokens: 1
+      methods: POST,PUT,DELETE,PATCH
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,caches
+  endpoint:
+    health:
+      show-details: always
+
+# Springdoc
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+logging:
+  level:
+    com.example.app: DEBUG
+    org.springframework.cache: TRACE

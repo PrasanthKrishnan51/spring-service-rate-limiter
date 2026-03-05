@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: product-service
+          uri: ${PRODUCT_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/api/v1/products/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway,metrics
+  endpoint:
+    gateway:
+      enabled: true
+    health:
+      show-details: always
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    com.example.gateway: DEBUG
+    reactor.netty: INFO

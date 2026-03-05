@@ -1,0 +1,12 @@
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  cloud:
+    gateway:
+      routes: []   # No real routes needed in unit tests
+
+logging:
+  level:
+    com.example.gateway: DEBUG
